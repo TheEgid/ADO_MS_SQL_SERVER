@@ -1,4 +1,4 @@
-VERSION 1.0 CLASS
+VERSION 2.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
@@ -9,24 +9,37 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 
 
+'******************************************************************************************
+'пример в отдельный модуль
+'******************************************************************************************
+
 'Option Explicit
 '
 'Sub ADOExample()
 '
-'Dim ADO As New ADO 'класс ado
+'Dim ADO As New ADO 'класс ADO
 '
 'Dim Zs As String
+'Dim arrA() As Variant
+'Dim count As Long
 '
 'ADO.Header = False
 'ADO.DataSource = ActiveWorkbook.Path & "\" & ActiveWorkbook.Name
 '
+'''''''''''''''''' обычный запрос
+'''''''''''''''''' Zs = "SELECT ProductId, TRIM(ProductName), Price FROM DEMO.dbo.Goods;"
 '
-'Zs = "SELECT ProductId, TRIM(ProductName), Price FROM DEMO.dbo.Goods;"
+'''''''''''''''''' запрос хранимой процедуры с параметрами - обязательно SET NOCOUNT ON; - иначе рекордсет не заполнится;
+'Zs = "SET NOCOUNT ON; EXEC DEMO.dbo.TestProcedure @CategoryId = 1, @ProductName = 'Чудесно работает!';"
+'
+'
 'ADO.Query Trim(Zs)
 '
-'Range("A2").CopyFromRecordset ADO.Recordset 'вывод
+'If Not ADO.Recordset.EOF Then arrA = ADO.ToArray 'загружаем в массив значений
 '
-'ADO.Destroy '«акрываем соединение, чтобы не висело : )
+'ADO.Destroy
+'
+'Range("A2").Resize(UBound(arrA, 1), UBound(arrA, 2)) = arrA 'выгружаем!
 '
 'End Sub
 
